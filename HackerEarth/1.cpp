@@ -5,25 +5,17 @@ int main(){
     int n;
     cin>>n;
 
-    vector<pair<long int,int>> sums(n);
+    vector<long double> x(n);
 
     int i;
     for(i = 0; i < n; i++){
-        int x,y,a,b;
-        cin>>x>>y>>a>>b;
-
-        long int sum = a+b+x+y;
-
-        sums[i] = {sum,i};
-
+        cin>> x[i];
     }
 
-    sort(sums.begin(),sums.end(), [](pair<long int,int>a,pair<long int,int> b)->bool{
-        return a.first<b.first;
-    });
+    long double sum = 0;
 
     for(i = 0; i < n; i++){
-        cout<<sums[i].second+1<<" ";
+        sum += (float(n-1)/2)*sin(2*x[i]);
     }
-    cout<<endl;
+    printf("%.2Lf\n", sum);
 }

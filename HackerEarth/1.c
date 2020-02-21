@@ -2,8 +2,9 @@
 
 int main(void)
 {
-    int arr[200000] = {0};
-    for (int i = 0; i < 200000; i++)
-        arr[i] = 2;
-    printf("%d\n", arr[1000]);
+	int arr[10] = {0};
+    for(int i = 0; i < 8; ++i){
+    	arr[i] = 1;
+    }
+    printf("%d\n",arr[0]);
 }

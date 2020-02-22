@@ -1,124 +1,110 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-void kthPlaindrome(long int n, long int k, long int sum, long int i,int s[]){
-    s[0] = 1;
-    long int j;
-    for(j = 1; j <= i-2; j++){
-        s[j] = 0;
-    }
-
-    s[i-1] = 1;
-
-    k-=sum;
-
-    for(j = 0; j <= (i-1)/2; j++){
-        if(j == 0){            s[0] = ceil(double(k)/pow(10,(i-1)/2));
-            k-=(s[0]-1)*pow(10,(i-1)/2);
-        }else{            s[j] = ceil(double(k)/pow(10,(i-1)/2-j))-1;
-            k-=(s[j]*pow(10,(i-1)/2-j));
-        }
-    }
-
-    for(j = 0; j < i/2; j++){
-        s[i-j-1] = s[j];
-    }
-}
-
-long long int decodePlainDrome(long long int n){
-    string s = to_string(n);
-    int length = s.length();
-
-    long long int sum = 1;
-    int i;
-    for(i = 1; i < length; i++){
-        sum+=9*pow(10,(i-1)/2);
-    }
-
-    int power = ceil(double(length)/2)-1;
-
-    for(i = 0; i <= ceil(double(length)/2)-1; i++){
-        int num = s[i]-48;
-        if(i == 0){
-            sum+=(num-1)*pow(10,power);
-        }else{
-            sum+=num*pow(10,power);
-        }
-        power--;
-    }
-
-    return sum;
-}
-
-bool isPlain(long int n){
-    string s = to_string(n);
-
-    int size = s.length();
-    for(int i = 0; i < size/2; i++){
-        if(s[i]!=s[size-i-1]){
-            return false;
-        }
-    }
-
-    return true;
-}
-
-long long int giveNearstPlain(long long int x){
-    string s = to_string(x);
-    string t = "";
-    int size = s.length();
-
-    int i;
-
-    for(i = 0; i <= (size-1)/2; i++){
-        t+=s[i];
-    }
-
-    for(i = size/2-1; i >= 0; i--){
-        t+=s[i];
-    }
-
-    long long int num = stoll(t);
-
-    if(num>x){
-        return decodePlainDrome(x)-1;
-    }else{
-        return decodePlainDrome(x);
-    }
-}
-
 int main(){
-    int t;
-    cin>>t;
+    int n,q;
+    cin>>n>>q;
 
-    while(t--){
-        long int x,k;
-        cin>>x>>k;
+    string s;
+    cin>>s;
 
-        if(isPlain(x))
-            k--;
+    for(int i = 0; i < q; i++){
+        int ino;
+        cin>>ino;
 
-        long long int index = giveNearstPlain(x);
-        k+=index;
-        long int sum = 0;
-        long int i = 1;
-        while(1){
-            long int res = 9*pow(10,(i-1)/2);
-            if(sum+res < k)
-                sum+=res;
-            else
+        switch(ino){
+            case 1:
+                char q;
+                cin>>q;
+                s+=q;
                 break;
-            i++;
+            case 2:{
+                // do something
+                int x,y;
+                cin>>x>>y;
+                x--,y--;
+                char ctof = s[0];
+
+                int j;
+                int l1 = 0,l2 = 0;
+                int index = -1;
+                for(j = x; j > 0; j--){
+                    if(s[j]==ctof)
+                        index = j;
+                }
+                if(index == -1){
+                    cout<<0<<endl;
+                    break;
+                }
+
+                int k = index;
+                j = 0;
+
+                // cout<<"k "<<k<<endl;
+                // cout<<"--------"<<endl;
+
+                // cout<<k<<" "<<y<<endl;
+
+                while(k<y&&s[k]==s[j]){
+                    // cout<<"fsdfs"<<endl;
+                    l1++;
+                    j++;
+                    k++;
+                }
+
+                index = -1;
+
+                for(j = y; j > x; j--){
+                    if(s[j] == ctof)
+                        index = j;
+                }
+
+                if(index == -1){
+                    cout<<0<<endl;
+                    break;
+                }
+
+                k = index;
+                j = 0;
+
+                // cout<<"k1 "<<k<<endl;
+                while(k<s.length()&&s[k]==s[j]){
+                    l2++;
+                    j++;
+                    k++;
+                }
+
+                // cout<<l1<<" "<<l2<<endl;
+
+                cout<<min(l2,l1)<<endl;
+                break;
+            }
+            default:{
+                int p,l,r;
+                cin>>p>>l>>r;
+                l--,r--,p--;
+                int index = l;
+
+                int counter = 0;
+                int j = 0;
+
+                bool started = false;
+                while(index<=r){
+                    if(s[j] == s[index]){
+                        if(j == 0){
+                            started = true;                        }
+                        j = (j+1)%(p+1);
+                        if(j == 0)
+                            counter++;
+                    }else if(started){
+                        j = 0;
+                        started = false;
+                    }
+                    index++;
+                }
+                cout<<counter<<endl;
+            }
         }
+    }
 
-        int s[i];
-
-        kthPlaindrome(1,k,sum,i,s);
-
-        int j;
-
-        for(j = 0; j < i; j++){
-            cout<<s[j];
-        }
-        cout<<endl;
-    }}
+}

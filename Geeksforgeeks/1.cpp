@@ -1,20 +1,12 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-void bfs(int src,vector<unordered_set<int>> &nodes, unordered_map<int,int> &parent, vector<bool> &visited,bool backward, queue<int> &q){
+void bfs(int src,vector<unordered_set<int>> &nodes,vector<bool> &visited, queue<int> &q){
 	unordered_set<int>::iterator it;
 	visited[src] = true;
 
 	for(it = nodes[src].begin(); it != nodes[src].end(); it++){
 		if(!visited[*it]){
-			visited[*it] = true;
-
-			if(backward){
-				parent.insert({*it,src});
-			}else{
-				parent.insert({src,*it});
-			}
-
 			visited[*it] = true;
 			q.push(*it);
 		}
@@ -44,41 +36,36 @@ int main(){
 	vector<bool> visited(11),visited1(11);
 
 	int clasedvertex = -1;
-
+	int l = 0;
 	while(!q.empty() && ! q1.empty()){
+		l++;
 		int src1 = q.front();
 		q.pop();
 		int src2 = q1.front();
 		q1.pop();
 
-		bfs(src2,nodes,parent,visited1,true,q1);
-		bfs(src1,nodes,parent,visited,false,q);
+		bfs(src2,nodes,visited1,q1);
+		bfs(src1,nodes,visited,q);
 
 		int i = 0;
 		bool found = false;
 		for(i = 0; i < 11; i++){
-			if(visited[i]==visited1[i]){
+			if(visited[i]==visited1[i] && visited1[i]==true && visited[i] == true){
 				found = true;
 				break;
 			}
 		}
 
-		if(found)
+		if(found){
 			clasedvertex = i;
+			break;
+		}
 	}
 
 	cout<<"classed "<<clasedvertex<<endl;
 
 	if(clasedvertex!=-1){
-		// print the path
-		cout<<dest;
-		int p = parent[dest];
-		cout<<p;
-		while(p!=-1){
-			p = parent[p];
-			cout<<p;
-		}
-		cout<<endl;
+		cout<<"l "<<l<<endl;
 	}else{
 		cout<<"No paths available"<<endl;
 	}

@@ -4,42 +4,42 @@ using namespace std;
 int main(){
     int t;
     cin>>t;
-
     while(t--){
-       int n;
-       long int x;
-       cin>>n>>x;
+        int a,b,c;
+        cin>>a>>b>>c;
 
-       vector<long int> fp(n);
-
-       int i;
-       for(i = 0; i < n; i++){
-        cin>>fp[i];
-       }
-
-       sort(fp.begin(),fp.end(),[](long int a, long int b)->bool{
-        return a>b;
-       });
-
-       long long int sum = 0;
-
-       int counter = 0;
-
-
-       for(i = 0; i <  n;i++){
-        sum+=fp[i];
-        counter++;
-        if(sum>=x){
-            break;
+        int sum = 0;
+        if(a>0){
+            sum++;
+            a--;
         }
-       }
-
-       if(counter == 1){
-        if(sum!=x){
-            counter++;
+        if(b>0){
+            sum++;
+            b--;
         }
-       }
+        if(c>0){
+            sum++;
+            c--;
+        }
 
-       cout<<counter<<endl;
+        if(a>2&&b>2&&c>2)
+            sum++;
+        if(a>0&&max(max(a,b),c)>=2)
+            a = max(max(a,b),c);
+
+        if(a>0&&b>0){
+            sum++;
+            a--,b--;
+        }
+        if(a>0&&c>0){
+            sum++;
+            a--,c--;
+        }
+        if(b>0&&c>0){
+            sum++;
+            b--,c--;
+        }
+
+        cout<<sum<<endl;
     }
 }

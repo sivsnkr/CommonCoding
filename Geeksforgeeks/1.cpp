@@ -1,72 +1,85 @@
 #include<bits/stdc++.h>
 using namespace std;
-int n,m;
-void Dfs(vector<vector<int>>&nodes,int i, int j){
-	if(nodes[i][j]!=1)
-		return;
 
-	nodes[i][j] = 2;
-	if(i-1>=0){
-		Dfs(nodes,i-1,j);
-	}
+void bfs(int src,vector<unordered_set<int>> &nodes, unordered_map<int,int> &parent, vector<bool> &visited,bool backward, queue<int> &q){
+	unordered_set<int>::iterator it;
+	visited[src] = true;
 
-	if(i+1<n){
-		Dfs(nodes,i+1,j);
-	}
+	for(it = nodes[src].begin(); it != nodes[src].end(); it++){
+		if(!visited[*it]){
+			visited[*it] = true;
 
-	if(j+1<m){
-		Dfs(nodes,i,j+1);
-	}
+			if(backward){
+				parent.insert({*it,src});
+			}else{
+				parent.insert({src,*it});
+			}
 
-	if(j-1>=0){
-		Dfs(nodes,i,j-1);
+			visited[*it] = true;
+			q.push(*it);
+		}
 	}
 }
 
 int main(){
-	int k,r;
-	cin>>n>>m>>k>>r;
+	int src = 0,dest = 10;
+	vector<unordered_set<int>> nodes(50);
 
 	int i;
-	vector<vector<int>> nodes(n, vector<int>(m,1));
+	cin>>i;
 
-	for(i = 0; i< k; i++){
-		int a,b;
-		cin>>a>>b;
+	for(int j = 0; j < i; j++){
+		int s,d;
+		cin>>s>>d;
+		nodes[s].insert(d);
+		nodes[d].insert(s);
+	}
 
-		int x,y;
+	queue<int> q,q1;
+	q.push(src);
+	q1.push(dest);
 
-		x=a,y=b;
+	unordered_map<int,int> parent;
+	parent.insert({src,-1});
+	vector<bool> visited(11),visited1(11);
 
-		y-=r;
-		x-=r;
+	int clasedvertex = -1;
 
-		if(y<0)
-			y = 0;
-		if(x < 0)
-			x = 0;
-		int j,k;
+	while(!q.empty() && ! q1.empty()){
+		int src1 = q.front();
+		q.pop();
+		int src2 = q1.front();
+		q1.pop();
 
-		for(j = y; j < y+2*r+1; j++){
-			for(k = x; k < x+2*r+1; k++){
-				nodes[k][j] = 0;
+		bfs(src2,nodes,parent,visited1,true,q1);
+		bfs(src1,nodes,parent,visited,false,q);
+
+		int i = 0;
+		bool found = false;
+		for(i = 0; i < 11; i++){
+			if(visited[i]==visited1[i]){
+				found = true;
+				break;
 			}
 		}
+
+		if(found)
+			clasedvertex = i;
 	}
 
-	for(i = 0; i < n; i++){
-		for(int j = 0; j < m; j++){
-			cout<<nodes[i][j]<<" ";
+	cout<<"classed "<<clasedvertex<<endl;
+
+	if(clasedvertex!=-1){
+		// print the path
+		cout<<dest;
+		int p = parent[dest];
+		cout<<p;
+		while(p!=-1){
+			p = parent[p];
+			cout<<p;
 		}
 		cout<<endl;
-	}
-
-	Dfs(nodes,0,0);
-
-	if(nodes[n-1][m-1] == 2){
-		cout<<"Possible";
 	}else{
-		cout<<"Not Possible";
+		cout<<"No paths available"<<endl;
 	}
-	cout<<endl;
 }

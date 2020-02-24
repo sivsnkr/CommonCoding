@@ -1,45 +1,28 @@
-#include <bits/stdc++.h>
-using namespace std;
-
+#include<stdio.h>
+int k[8],a,b,c,r;
+void f(int n){
+    if(n==8){
+        int h=0,A=0,B=0,C=0;
+        for(int i=1;i<8;i++){
+            h+=k[i];
+            A+=k[i]*(i&1);
+            B+=k[i]*((i&2)>>1);
+            C+=k[i]*((i&4)>>2);
+        }
+        if(A<=a&&B<=b&&C<=c&&r<h)r=h;
+        return;
+    }
+    k[n]=0;
+    f(n+1);
+    k[n]=1;
+    f(n+1);
+}
 int main(){
-    int t;
-    cin>>t;
+    int t;scanf("%d",&t);
     while(t--){
-        int a,b,c;
-        cin>>a>>b>>c;
-
-        int sum = 0;
-        if(a>0){
-            sum++;
-            a--;
-        }
-        if(b>0){
-            sum++;
-            b--;
-        }
-        if(c>0){
-            sum++;
-            c--;
-        }
-
-        if(a>2&&b>2&&c>2)
-            sum++;
-        if(a>0&&max(max(a,b),c)>=2)
-            a = max(max(a,b),c);
-
-        if(a>0&&b>0){
-            sum++;
-            a--,b--;
-        }
-        if(a>0&&c>0){
-            sum++;
-            a--,c--;
-        }
-        if(b>0&&c>0){
-            sum++;
-            b--,c--;
-        }
-
-        cout<<sum<<endl;
+        scanf("%d%d%d",&a,&b,&c);
+        r=0;
+        f(1);
+        printf("%d\n",r);
     }
 }

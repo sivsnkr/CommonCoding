@@ -1,72 +1,68 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-void bfs(int src,vector<unordered_set<int>> &nodes,vector<bool> &visited, queue<int> &q){
-	unordered_set<int>::iterator it;
-	visited[src] = true;
+int sidha = 0,ulta = 0;
 
-	for(it = nodes[src].begin(); it != nodes[src].end(); it++){
-		if(!visited[*it]){
-			visited[*it] = true;
-			q.push(*it);
+void dfs(int src, vector<pair<unordered_set<int>,unordered_set<int>>> &nodes,vector<int> &ok, vector<int> &rev, vector<bool> &visit){
+	visit[src] = true;
+
+	unordered_set<int>::iterator it;
+
+	for(it = nodes[src].first.begin(); it != nodes[src].first.end(); it++){
+		if(!visit[*it]){
+			sidha++;
+			if(ok[*it] != 0)
+				ok[*it] = min(sidha,ok[*it]);
+			else
+				ok[*it] = sidha;
+			rev[*it] = ulta;
+			dfs(*it,nodes,ok,rev,visit);
+		}
+	}
+
+
+	for(it = nodes[src].second.begin(); it != nodes[src].second.end(); it++){
+		if(!visit[*it]){
+			ulta++;
+			if(rev[*it] != 0)
+				rev[*it] = min(ulta,rev[*it]);
+			else
+				rev[*it] = ulta;
+			ok[*it] = sidha;
+			dfs(*it,nodes,ok,rev,visit);
 		}
 	}
 }
 
 int main(){
-	int src = 0,dest = 10;
-	vector<unordered_set<int>> nodes(50);
+	int n;
+	cin>>n;
+	vector<pair<unordered_set<int>,unordered_set<int>>> nodes(n);
 
 	int i;
-	cin>>i;
+	for(i = 0; i < n-1; i++){
+		int src,dest;
+		cin>>src>>dest;
 
-	for(int j = 0; j < i; j++){
-		int s,d;
-		cin>>s>>d;
-		nodes[s].insert(d);
-		nodes[d].insert(s);
+		nodes[src].first.insert(dest);
+		nodes[dest].second.insert(src);
 	}
 
-	queue<int> q,q1;
-	q.push(src);
-	q1.push(dest);
+	vector<int> ok(n,0),rev(n,0);
+	vector<bool> visit(n,false);
 
-	unordered_map<int,int> parent;
-	parent.insert({src,-1});
-	vector<bool> visited(11),visited1(11);
+	dfs(0,nodes,ok,rev,visit);
 
-	int clasedvertex = -1;
-	int l = 0;
-	while(!q.empty() && ! q1.empty()){
-		l++;
-		int src1 = q.front();
-		q.pop();
-		int src2 = q1.front();
-		q1.pop();
+	int m = INT_MAX,node = 0;
+	for(i = 0; i < n; i++){
+		int res = ok[i]+ulta-rev[i];
 
-		bfs(src2,nodes,visited1,q1);
-		bfs(src1,nodes,visited,q);
-
-		int i = 0;
-		bool found = false;
-		for(i = 0; i < 11; i++){
-			if(visited[i]==visited1[i] && visited1[i]==true && visited[i] == true){
-				found = true;
-				break;
-			}
-		}
-
-		if(found){
-			clasedvertex = i;
-			break;
+		if(res < m){
+			m = res;
+			node = i;
 		}
 	}
 
-	cout<<"classed "<<clasedvertex<<endl;
-
-	if(clasedvertex!=-1){
-		cout<<"l "<<l<<endl;
-	}else{
-		cout<<"No paths available"<<endl;
-	}
+	cout<<node<<endl;
+	cout<<m<<endl;
 }

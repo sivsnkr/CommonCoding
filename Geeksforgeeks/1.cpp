@@ -1,42 +1,97 @@
-#include<bits/stdc++.h>
-
+#include <bits/stdc++.h>
 using namespace std;
 
-int res(int a,int b){
+int bfs(vector<set<int>> &nodes, int size){
 	queue<pair<int,int>> q;
-	q.push({a,0});
+	q.push({0,0});
 
-	unordered_set<int> visit;
-	visit.insert(a);
+	vector<bool> visit(size,false);
+	visit[0] = true;
 	while(!q.empty()){
-		pair<int,int> curnode = q.front();
+		int curnode = q.front().first;
+
+		int level = q.front().second;
+
 		q.pop();
 
-		int x = curnode.first;
-		int level = curnode.second;
+		set<int>::iterator it;
 
-		if(2*x == b|| x-1 == b)
-			return level+1;
-
-		if(visit.find(2*x) == visit.end()){
-			visit.insert(2*x);
-			q.push({2*x,level+1});
-		}
-		if(visit.find(x-1) == visit.end()){
-			visit.insert(x-1);
-			q.push({x-1,level+1});
+		for(it = nodes[curnode].begin(); it != nodes[curnode].end(); it++){
+			if(*it == size - 1)
+				return level+1;
+			else{
+				visit[*it] = true;
+				q.push({*it,level+1});
+			}
 		}
 	}
-	return 0;
+
+	return -1;
 }
-int main(){
-	int a,b;
-	cin>>a>>b;
 
-	int r = res(a,b);
-	if(r != 0){
-		cout<<r<<endl;
-	}else{
-		cout<<"Not possible "<<endl;
+int main()
+{
+	int n;
+	cin >> n;
+
+	vector<int> elements(n);
+
+	int i;
+	for(i = 0; i < n; i++){
+		cin>>elements[i];
 	}
+
+	unordered_map<int,set<int>> connectingNodes(n);
+
+	unordered_map<int,set<int>>::iterator it;
+	set<int>::iterator it1;
+
+	set<int> temp;
+
+	for(i = 0; i < n; i++){
+		if(connectingNodes.find(elements[i]) == connectingNodes.end()){
+			temp.insert(i);
+			connectingNodes.insert({elements[i],temp});
+			temp.clear();
+		}else{
+			connectingNodes[elements[i]].insert(i);
+		}
+	}
+
+	vector<set<int>> nodes(n);
+
+	for(it = connectingNodes.begin(); it != connectingNodes.end(); it++){
+		int index = (*(*it).second.begin());
+
+		if(index - 1 >= 0){
+			nodes[index].insert(index-1);
+		}
+
+		if(index + 1 < n){
+			nodes[index].insert(index+1);
+		}
+
+		it1 = (*it).second.begin();
+		it1++;
+
+		for(it1 = it1; it1 != (*it).second.end(); it1++){
+			nodes[index].insert(*it1);
+		}
+	}
+
+
+	for(i = 0; i < n; i++){
+		if(nodes[i].size() == 0){
+			if(i - 1 >= 0){
+				nodes[i].insert(i-1);
+			}
+
+			if(i + 1 < n){
+				nodes[i].insert(i+1);
+			}
+		}
+	}
+
+	int res = bfs(nodes,n);
+	cout<<res<<endl;
 }

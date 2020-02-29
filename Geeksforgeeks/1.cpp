@@ -1,99 +1,77 @@
-// C++ program to find root which gives minimum height to tree 
-#include <bits/stdc++.h> 
-using namespace std; 
+#include<bits/stdc++.h>
 
-// This class represents a undirected graph using adjacency list 
-// representation 
-class Graph 
-{ 
-public: 
-	int V; // No. of vertices 
+using namespace std;
 
-	// Pointer to an array containing adjacency lists 
-	list<int> *adj; 
+void bfs(vector<int> &numbers,int m){
+	queue<int> q;
 
-	// Vector which stores degree of all vertices 
-	vector<int> degree; 
+	int i;
+	for(i = 0; i < numbers.size(); i++){
+		q.push(numbers[i]);
+	}
 
-	Graph(int V);		 // Constructor 
-	void addEdge(int v, int w); // To add an edge 
+	q.pop();
 
-	// function to get roots which give minimum height 
-	vector<int> rootForMinimumHeight(); 
-}; 
+	int number;
+	char a;
 
-// Constructor of graph, initializes adjacency list and 
-// degree vector 
-Graph::Graph(int V) 
-{ 
-	this->V = V; 
-	adj = new list<int>[V]; 
-	for (int i = 0; i < V; i++) 
-		degree.push_back(0); 
-} 
+	int counter = 0;
 
-// addEdge method adds vertex to adjacency list and increases 
-// degree by 1 
-void Graph::addEdge(int v, int w) 
-{ 
-	adj[v].push_back(w); // Add w to v’s list 
-	adj[w].push_back(v); // Add v to w’s list 
-	degree[v]++;		 // increment degree of v by 1 
-	degree[w]++;		 // increment degree of w by 1 
-} 
+	while(!q.empty()){
+		int top = q.front();
 
-// Method to return roots which gives minimum height to tree 
-vector<int> Graph::rootForMinimumHeight() 
-{ 
-	queue<int> q; 
+		// cout<<"top "<<top<<endl;
+		q.pop();
 
-	// first enqueue all leaf nodes in queue 
-	for (int i = 0; i < V; i++) 
-		if (degree[i] == 1) 
-			q.push(i); 
+		int lastIndex = top%10;
 
-	// loop untill total vertex remains less than 2 
-	while (V > 2) 
-	{ 
-		for (int i = 0; i < q.size(); i++) 
-		{ 
-			int t = q.front(); 
-			q.pop(); 
-			V--; 
+		if(lastIndex+1 < 10){
+			a = lastIndex+1+48;
+			string n = to_string(top)+a;
+			number = stoi(n);
+			// cout<<"string "<<n<<endl;
+			if(number <= m){
+				q.push(number);
+				cout<<number<<" ";
+			}
+		}
 
-			// for each neighbour, decrease its degree and 
-			// if it become leaf, insert into queue 
-			for (auto j = adj[t].begin(); j != adj[t].end(); j++) 
-			{ 
-				degree[*j]--; 
-				if (degree[*j] == 1) 
-					q.push(*j); 
-			} 
-		} 
-	} 
+		if(lastIndex-1 >= 0){
+			lastIndex--;
+			a = lastIndex+48;
+			string n = to_string(top)+a;
+			// cout<<"string "<<n<<endl;
+			number = stoi(n);
+			if(number <= m){
+				q.push(number);
+				cout<<number<<" ";
+			}
+		}
+		// counter++;
+		// if(counter>10)
+		// 	break;
+	}
 
-	// copying the result from queue to result vector 
-	vector<int> res; 
-	while (!q.empty()) 
-	{ 
-		res.push_back(q.front()); 
-		q.pop(); 
-	} 
-	return res; 
-} 
+	cout<<endl;
+}
+int main(){
+	int n,m;
+	cin>>n>>m;
 
-// Driver code to test above methods 
-int main() 
-{ 
-	Graph g(7); 
-	g.addEdge(0, 1); 
-	g.addEdge(1, 2); 
-	g.addEdge(2, 3); 
-	g.addEdge(3, 4); 
-	g.addEdge(4, 5); 
-	g.addEdge(5, 6);
-	vector<int> res = g.rootForMinimumHeight(); 
-	for (int i = 0; i < res.size(); i++) 
-		cout << res[i] << " "; 
-	cout << endl; 
-} 
+	int number = 0;
+
+	vector<int> numbers;
+
+	while(number <= 9 && number <= m){
+		numbers.push_back(number);
+		number++;
+	}
+
+	for(int i = n; i < numbers.size(); i++){
+		cout<<numbers[i]<<" ";
+	}
+
+	// print all the numbers added till now
+
+	bfs(numbers,m);
+}

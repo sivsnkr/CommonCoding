@@ -1,77 +1,61 @@
 #include<bits/stdc++.h>
-
 using namespace std;
 
-void bfs(vector<int> &numbers,int m){
-	queue<int> q;
-
-	int i;
-	for(i = 0; i < numbers.size(); i++){
-		q.push(numbers[i]);
-	}
-
-	q.pop();
-
-	int number;
-	char a;
-
-	int counter = 0;
-
-	while(!q.empty()){
-		int top = q.front();
-
-		// cout<<"top "<<top<<endl;
-		q.pop();
-
-		int lastIndex = top%10;
-
-		if(lastIndex+1 < 10){
-			a = lastIndex+1+48;
-			string n = to_string(top)+a;
-			number = stoi(n);
-			// cout<<"string "<<n<<endl;
-			if(number <= m){
-				q.push(number);
-				cout<<number<<" ";
-			}
-		}
-
-		if(lastIndex-1 >= 0){
-			lastIndex--;
-			a = lastIndex+48;
-			string n = to_string(top)+a;
-			// cout<<"string "<<n<<endl;
-			number = stoi(n);
-			if(number <= m){
-				q.push(number);
-				cout<<number<<" ";
-			}
-		}
-		// counter++;
-		// if(counter>10)
-		// 	break;
-	}
-
-	cout<<endl;
+bool isSafe(int matrix[4][5], int rowNum,int colNum, bool visited[4][5]){
+	if(rowNum<4&&colNum<5&&!visited[rowNum][colNum]&&matrix[rowNum][colNum])
+		return true;
+	return false;
 }
-int main(){
-	int n,m;
-	cin>>n>>m;
 
-	int number = 0;
+void dfs(int matrix[4][5], int i, int j, bool visited[4][5],int &count)
+{
+	visited[i][j] = true;
 
-	vector<int> numbers;
+	int rowNum[8] = {-1,-1,-1,0,0,1,1,1};
+	int colNum[8] = {-1,0,1,-1,1,-1,0,1};
 
-	while(number <= 9 && number <= m){
-		numbers.push_back(number);
-		number++;
+	int k;
+
+	for(k = 0; k < 8; k++)
+	{
+		if(isSafe(matrix,i+rowNum[k],j+colNum[k],visited))
+		{
+			count++;
+			dfs(matrix,i+rowNum[k],j+colNum[k],visited,count);
+		}
+	}
+}
+
+int main()
+{
+	int matrix[4][5];
+
+	int i,j;
+
+	for(i = 0; i < 4; i++)
+	{
+		for(j = 0; j < 5; j++)
+		{
+			cin>>matrix[i][j];
+		}
 	}
 
-	for(int i = n; i < numbers.size(); i++){
-		cout<<numbers[i]<<" ";
+	bool visited[4][5] = {0};
+
+	int result = 0;
+
+	for(i = 0; i < 4; i++)
+	{
+		for(j = 0;j < 5; j++)
+		{
+			if(!visited[i][j] && matrix[i][j])
+			{
+				int count = 1;
+				dfs(matrix,i,j,visited,count);
+				result = max(result,count);
+			}
+		}
 	}
 
-	// print all the numbers added till now
-
-	bfs(numbers,m);
+	cout<<result<<endl;
 }

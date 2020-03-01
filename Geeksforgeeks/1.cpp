@@ -21,13 +21,11 @@ public:
 void Graph::addEdge(int src, int dest)
 {
 	nodes[src].insert(dest);
+	nodes[dest].insert(src);
 }
 
-bool dfs(int src, unordered_set<int> nodes[], vector<bool> &visited)
+bool dfs(int src,int parent,unordered_set<int> nodes[], vector<bool> &visited)
 {
-	if(visited[src])
-		return true;
-
 	visited[src] = true;
 
 	unordered_set<int>::iterator it;
@@ -36,9 +34,14 @@ bool dfs(int src, unordered_set<int> nodes[], vector<bool> &visited)
 
 	for(it = nodes[src].begin(); it != nodes[src].end(); it++)
 	{
-		isCycle = dfs(*it,nodes,visited);
-		if(isCycle)
-			break;
+		if(!visited[*it]){
+			isCycle = dfs(*it,src,nodes,visited);
+			if(isCycle)
+				break;
+		}else{
+			if(*it != parent)
+				return true;
+		}
 	}
 
 	return isCycle;
@@ -51,7 +54,7 @@ bool Graph::isCyclic()
 
 	vector<bool> visited(noofnodes,false);
 
-	return dfs(0,nodes,visited);
+	return dfs(0,0,nodes,visited);
 }
 
 int main()

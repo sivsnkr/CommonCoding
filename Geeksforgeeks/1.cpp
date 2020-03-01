@@ -1,61 +1,79 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-bool isSafe(int matrix[4][5], int rowNum,int colNum, bool visited[4][5]){
-	if(rowNum<4&&colNum<5&&!visited[rowNum][colNum]&&matrix[rowNum][colNum])
-		return true;
-	return false;
+class Graph
+{
+	int noofnodes;
+	unordered_set<int> *nodes;
+	bool hasCycle = false;
+public:
+	Graph(int n)
+	{
+		this->nodes = new unordered_set<int>[n];
+		this->noofnodes = n;
+	}
+
+	void addEdge(int src, int dest);
+
+	bool isCyclic();
+};
+
+void Graph::addEdge(int src, int dest)
+{
+	nodes[src].insert(dest);
 }
 
-void dfs(int matrix[4][5], int i, int j, bool visited[4][5],int &count)
+bool dfs(int src, unordered_set<int> nodes[], vector<bool> &visited)
 {
-	visited[i][j] = true;
+	if(visited[src])
+		return true;
 
-	int rowNum[8] = {-1,-1,-1,0,0,1,1,1};
-	int colNum[8] = {-1,0,1,-1,1,-1,0,1};
+	visited[src] = true;
 
-	int k;
+	unordered_set<int>::iterator it;
 
-	for(k = 0; k < 8; k++)
+	int isCycle = false;
+
+	for(it = nodes[src].begin(); it != nodes[src].end(); it++)
 	{
-		if(isSafe(matrix,i+rowNum[k],j+colNum[k],visited))
-		{
-			count++;
-			dfs(matrix,i+rowNum[k],j+colNum[k],visited,count);
-		}
+		isCycle = dfs(*it,nodes,visited);
+		if(isCycle)
+			break;
 	}
+
+	return isCycle;
+}
+
+bool Graph::isCyclic()
+{
+	if(hasCycle)
+		return hasCycle;
+
+	vector<bool> visited(noofnodes,false);
+
+	return dfs(0,nodes,visited);
 }
 
 int main()
 {
-	int matrix[4][5];
+	int n;
+	cin>>n;
+	int edge;
+	cin>>edge;
+	Graph graph(n);
 
-	int i,j;
-
-	for(i = 0; i < 4; i++)
-	{
-		for(j = 0; j < 5; j++)
-		{
-			cin>>matrix[i][j];
-		}
+	int i;
+	for(i = 0; i < edge; i++){
+		int src,dest;
+		cin>>src>>dest;
+		graph.addEdge(src,dest);
 	}
 
-	bool visited[4][5] = {0};
+	bool hasCycle = graph.isCyclic();
 
-	int result = 0;
-
-	for(i = 0; i < 4; i++)
-	{
-		for(j = 0;j < 5; j++)
-		{
-			if(!visited[i][j] && matrix[i][j])
-			{
-				int count = 1;
-				dfs(matrix,i,j,visited,count);
-				result = max(result,count);
-			}
-		}
-	}
-
-	cout<<result<<endl;
+	if(hasCycle)
+		cout<<"True";
+	else
+		cout<<"False";
+	cout<<endl;
 }

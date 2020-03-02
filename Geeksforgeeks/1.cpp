@@ -1,82 +1,51 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-class Graph
+void dfs(int parent, int src, vector<unordered_set<int>> &nodes, int edgenumber, int &count,int level, vector<bool> &visit)
 {
-	int noofnodes;
-	unordered_set<int> *nodes;
-	bool hasCycle = false;
-public:
-	Graph(int n)
+	if(level == edgenumber-1)
 	{
-		this->nodes = new unordered_set<int>[n];
-		this->noofnodes = n;
+		if(nodes[src].find(parent) != nodes[src].end())
+			count++;
+		return;
 	}
 
-	void addEdge(int src, int dest);
-
-	bool isCyclic();
-};
-
-void Graph::addEdge(int src, int dest)
-{
-	nodes[src].insert(dest);
-	nodes[dest].insert(src);
-}
-
-bool dfs(int src,int parent,unordered_set<int> nodes[], vector<bool> &visited)
-{
-	visited[src] = true;
+	visit[src] = true;
 
 	unordered_set<int>::iterator it;
-
-	int isCycle = false;
-
 	for(it = nodes[src].begin(); it != nodes[src].end(); it++)
 	{
-		if(!visited[*it]){
-			isCycle = dfs(*it,src,nodes,visited);
-			if(isCycle)
-				break;
-		}else{
-			if(*it != parent)
-				return true;
-		}
+		if(!visit[*it])
+			dfs(parent, *it, nodes, edgenumber, count, level+1,visit);
 	}
-
-	return isCycle;
-}
-
-bool Graph::isCyclic()
-{
-	if(hasCycle)
-		return hasCycle;
-
-	vector<bool> visited(noofnodes,false);
-
-	return dfs(0,0,nodes,visited);
+	if(level != 1)
+		visit[src] = false;
 }
 
 int main()
 {
-	int n;
-	cin>>n;
-	int edge;
-	cin>>edge;
-	Graph graph(n);
+	int n = 5,edge = 6,edgenumber = 3;
+	vector<unordered_set<int>> nodes(n);
 
 	int i;
-	for(i = 0; i < edge; i++){
+	for(i = 0; i < edge; i++)
+	{
 		int src,dest;
 		cin>>src>>dest;
-		graph.addEdge(src,dest);
+
+		nodes[src].insert(dest);
+		nodes[dest].insert(src);
 	}
 
-	bool hasCycle = graph.isCyclic();
+	int count = 0;
+	vector<bool> visit(n, false);
+	for(i = 0; i < n-(edgenumber-1); i++)
+	{
+		// parent src nodes edgenumber count level
+		dfs(i, i, nodes, edgenumber, count, 0, visit);
+		visit.assign(n,false);
+		visit[i] = true;
+	}
 
-	if(hasCycle)
-		cout<<"True";
-	else
-		cout<<"False";
-	cout<<endl;
+	cout<<count<<endl;
 }

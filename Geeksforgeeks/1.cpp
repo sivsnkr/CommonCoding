@@ -1,51 +1,65 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-void dfs(int parent, int src, vector<unordered_set<int>> &nodes, int edgenumber, int &count,int level, vector<bool> &visit)
-{
-	if(level == edgenumber-1)
-	{
-		if(nodes[src].find(parent) != nodes[src].end())
-			count++;
-		return;
-	}
-
-	visit[src] = true;
-
-	unordered_set<int>::iterator it;
-	for(it = nodes[src].begin(); it != nodes[src].end(); it++)
-	{
-		if(!visit[*it])
-			dfs(parent, *it, nodes, edgenumber, count, level+1,visit);
-	}
-	if(level != 1)
-		visit[src] = false;
-}
-
 int main()
 {
-	int n = 5,edge = 6,edgenumber = 3;
-	vector<unordered_set<int>> nodes(n);
+	int n;
+	cin>>n;
+	vector<set<pair<int,int>>> nodes(n);
+	int edge;
+	cin>>edge;
 
 	int i;
 	for(i = 0; i < edge; i++)
 	{
-		int src,dest;
-		cin>>src>>dest;
-
-		nodes[src].insert(dest);
-		nodes[dest].insert(src);
+		int src,dest,weight;
+		cin>>src>>dest>>weight;
+		nodes[src].insert(make_pair(dest,weight));
 	}
 
-	int count = 0;
-	vector<bool> visit(n, false);
-	for(i = 0; i < n-(edgenumber-1); i++)
+	// first is nodenumber , second is weight
+
+	//taking source as 0
+
+	vector<int> distance(n,INT_MAX);
+	distance[0] = 0;
+
+	vector<bool> allSelected(n,false);
+	allSelected[0] = 1;
+
+	int s;
+	s = 0;
+	set<pair<int,int>>::iterator it;
+
+	while(1)
+	{		for(it = nodes[s].begin(); it != nodes[s].end(); it++)
+		{
+			if(distance[s]+(*it).second < distance[(*it).first])
+			{
+				distance[(*it).first] = distance[s]+(*it).second;
+			}
+		}
+
+		int min = INT_MAX;
+
+		int j;
+		s = -1;
+		for(j = 0; j < n; j++)
+		{
+			if(!allSelected[j]&&distance[j]<min)
+			{
+				min = distance[j];
+				s = j;
+			}
+		}
+
+		if(s == -1)
+			break;
+		allSelected[s] = 1;
+	}
+
+	for(i = 0; i < n; i++)
 	{
-		// parent src nodes edgenumber count level
-		dfs(i, i, nodes, edgenumber, count, 0, visit);
-		visit.assign(n,false);
-		visit[i] = true;
+		cout<<"distance from src to "<<i<<" is "<<distance[i]<<endl;
 	}
-
-	cout<<count<<endl;
 }

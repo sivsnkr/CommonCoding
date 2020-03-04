@@ -17,10 +17,6 @@ int main()
 		nodes[src].insert(make_pair(dest,weight));
 	}
 
-	// first is nodenumber , second is weight
-
-	//taking source as 0
-
 	vector<int> distance(n,INT_MAX);
 	distance[0] = 0;
 

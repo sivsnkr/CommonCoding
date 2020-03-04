@@ -3,59 +3,52 @@ using namespace std;
 
 int main()
 {
+	int noofvertices = 0;
+
 	int n;
+	cout<<"Enter the no of edges: ";
 	cin>>n;
-	vector<set<pair<int,int>>> nodes(n);
-	int edge;
-	cin>>edge;
 
 	int i;
-	for(i = 0; i < edge; i++)
-	{
-		int src,dest,weight;
-		cin>>src>>dest>>weight;
-		nodes[src].insert(make_pair(dest,weight));
-	}
 
-	vector<int> distance(n,INT_MAX);
-	distance[0] = 0;
-
-	vector<bool> allSelected(n,false);
-	allSelected[0] = 1;
-
-	int s;
-	s = 0;
-	set<pair<int,int>>::iterator it;
-
-	while(1)
-	{		for(it = nodes[s].begin(); it != nodes[s].end(); it++)
-		{
-			if(distance[s]+(*it).second < distance[(*it).first])
-			{
-				distance[(*it).first] = distance[s]+(*it).second;
-			}
-		}
-
-		int min = INT_MAX;
-
-		int j;
-		s = -1;
-		for(j = 0; j < n; j++)
-		{
-			if(!allSelected[j]&&distance[j]<min)
-			{
-				min = distance[j];
-				s = j;
-			}
-		}
-
-		if(s == -1)
-			break;
-		allSelected[s] = 1;
-	}
-
+	vector<tuple<int,int,int>> edges(n);
 	for(i = 0; i < n; i++)
 	{
-		cout<<"distance from src to "<<i<<" is "<<distance[i]<<endl;
+		int src,dest;
+		int weight;
+		cin>>src>>dest>>weight;
+		edges[i] = make_tuple(src,dest,weight);
+		if(noofvertices<dest){
+			noofvertices = dest;
+		}
+	}
+
+	vector<int> shortestPaths(noofvertices+1,INT_MAX);
+	shortestPaths[0] = 0;
+
+	for(i = 0; i <= noofvertices; i++)
+	{
+
+		bool  changed = false;
+		for(int j = 0; j < n; j++)
+		{
+			int src = get<0>(edges[j]);
+			int dest = get<1>(edges[j]);
+			int weight = get<2>(edges[j]);
+
+			if(shortestPaths[src]+weight < shortestPaths[dest])
+			{
+				shortestPaths[dest] = shortestPaths[src]+weight;
+				changed = true; 
+			}
+		}
+
+		if(!changed)
+			break;
+	}
+
+	for(i = 0; i <= noofvertices; i++)
+	{
+		cout<<"Min path from 0 to "<<i<<" is "<<shortestPaths[i]<<endl;
 	}
 }

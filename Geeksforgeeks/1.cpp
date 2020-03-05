@@ -3,52 +3,39 @@ using namespace std;
 
 int main()
 {
-	int noofvertices = 0;
+	int i,j,k;
 
-	int n;
-	cout<<"Enter the no of edges: ";
-	cin>>n;
+	vector<vector<int>> weights(4,vector<int>(4,50));
 
-	int i;
-
-	vector<tuple<int,int,int>> edges(n);
-	for(i = 0; i < n; i++)
+	for(i = 0; i < 7; i++)
 	{
-		int src,dest;
 		int weight;
-		cin>>src>>dest>>weight;
-		edges[i] = make_tuple(src,dest,weight);
-		if(noofvertices<dest){
-			noofvertices = dest;
-		}
+		cin>>j>>k>>weight;
+		weights[j][k] = weight;
 	}
 
-	vector<int> shortestPaths(noofvertices+1,INT_MAX);
-	shortestPaths[0] = 0;
-
-	for(i = 0; i <= noofvertices; i++)
+	for(i = 0; i < 4; i++)
 	{
+		weights[i][i] = 0;
+	}
 
-		bool  changed = false;
-		for(int j = 0; j < n; j++)
+	for(k = 0; k < 4; k++)
+	{
+		for(i = 0; i < 4; i++)
 		{
-			int src = get<0>(edges[j]);
-			int dest = get<1>(edges[j]);
-			int weight = get<2>(edges[j]);
-
-			if(shortestPaths[src]+weight < shortestPaths[dest])
+			for(j = 0; j < 4; j++)
 			{
-				shortestPaths[dest] = shortestPaths[src]+weight;
-				changed = true; 
+				weights[i][j] = min(weights[i][j],weights[i][k]+weights[k][j]);
 			}
 		}
-
-		if(!changed)
-			break;
 	}
 
-	for(i = 0; i <= noofvertices; i++)
+	for(i = 0; i < 4; i++)
 	{
-		cout<<"Min path from 0 to "<<i<<" is "<<shortestPaths[i]<<endl;
+		for(j = 0; j < 4; j++)
+		{
+			cout<<weights[i][j]<<" ";
+		}
+		cout<<endl;
 	}
 }

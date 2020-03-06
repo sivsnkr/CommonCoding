@@ -3,39 +3,54 @@ using namespace std;
 
 int main()
 {
-	int i,j,k;
+	int edge = 5;
 
-	vector<vector<int>> weights(4,vector<int>(4,50));
+	int i; // counter
 
-	for(i = 0; i < 7; i++)
+	vector<tuple<int,int,int>> edges(edge);
+
+	for(i = 0; i < edge; i++)
 	{
-		int weight;
-		cin>>j>>k>>weight;
-		weights[j][k] = weight;
+		int src,dest,weight;
+		cin>>src>>dest>>weight;
+		edges[i] = {src,dest,weight};
 	}
 
-	for(i = 0; i < 4; i++)
-	{
-		weights[i][i] = 0;
-	}
+	vector<tuple<int,int,int>> modifiedEdges(edge+4);
+	modifiedEdges.assign(edges.begin(),edges.end());
 
-	for(k = 0; k < 4; k++)
+	vector<int> weights(5);
+	weights[0] = 0;
+
+	int j;
+
+	for(i = 0; i < 3; i++)
 	{
-		for(i = 0; i < 4; i++)
+		bool changed = false;
+		for(j = 0; j < edge; j++)
 		{
-			for(j = 0; j < 4; j++)
+			int src = get<0>(modifiedEdges[j]);
+			int dest = get<1>(modifiedEdges[j]);
+			int weight = get<2>(modifiedEdges[j]);
+
+			if(weights[dest] > weights[src]+weight)
 			{
-				weights[i][j] = min(weights[i][j],weights[i][k]+weights[k][j]);
+				changed = false;
+				weights[dest] = weights[src]+weight;
 			}
 		}
+
+		if(!changed)
+			break;
+
 	}
 
-	for(i = 0; i < 4; i++)
+	for(i = 0; i < edge; i++)
 	{
-		for(j = 0; j < 4; j++)
-		{
-			cout<<weights[i][j]<<" ";
-		}
-		cout<<endl;
+		int src = get<0>(edges[i]);
+		int dest = get<1>(edges[i]);
+		get<2>(edges[i]) = weights[dest]-weights[src]+ get<2>(edges[i]);
 	}
+
+	// now run djiskstra for all vertices as source and store nodes in adjacency list
 }

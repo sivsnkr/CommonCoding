@@ -3,23 +3,25 @@ using namespace std;
 
 int main()
 {
-    vector<set<pair<int,int>>> graph(9);
-
+    int max_dist = 2; // max weight of any edge
+    int nodes = 4; // number of nodes
+    int edges = 7;
+    vector<set<pair<int,int>>> graph(nodes);
     int i;
-
-    for(i = 0; i < 14; i++)
+    for(i = 0; i < edges; i++)
     {
         int src,dest,weight;
         cin>>src>>dest>>weight;
         graph[src].insert({dest,weight});
     }
-    int max_dist = 14;
-    vector<set<int>> bucket(14*9);
-    vector<int> weights(9,0);
+    vector<set<int>> bucket(max_dist*nodes);
+    vector<int> weights(nodes,0);
+    vector<int> parent(nodes);
+    parent[0] = 0;
 
     bucket[0].insert(0);
 
-    for(i = 0; i < 14*9; i++)
+    for(i = 0; i < nodes*max_dist; i++)
     {
         if(bucket[i].size() > 0)
         {
@@ -41,12 +43,13 @@ int main()
                     int weight = it1->second;
 
                     bucket[weight+i].insert(dest);
+                    parent[dest] = src;
                 }
             }
         }
     }
 
-    for(i = 0; i < 9; i++)
+    for(i = 0; i < nodes; i++)
     {
         cout<<"weight of "<<i<<" is "<<weights[i]<<endl;
     }

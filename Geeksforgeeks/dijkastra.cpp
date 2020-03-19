@@ -35,7 +35,9 @@ void print_path(vector<int> &parent, int node, int source)
 
 int main()
 {
-    int nodes = 9,edges = 14;
+    int nodes,edges;
+    cout<<"Enter the no of nodes and deges: ";
+    cin>>nodes>>edges;
     vector<vector<pair<int,int>>> graph(nodes);
     int i;
 
@@ -83,9 +85,9 @@ int main()
     source = 0;
     for(i = 0; i < nodes; i++)
     {
-        cout<<"path to "<<i<<" is ";
-        print_path(parent,i,source);
-        // cout<<"Min path from 0 to "<<i<<" is "<<path[i]<<endl;
+        // cout<<"path to "<<i<<" is ";
+        // print_path(parent,i,source);
+        cout<<"Min path from 0 to "<<i<<" is "<<path[i]<<endl;
     }
     // cout<<path[4]<<endl;
 }

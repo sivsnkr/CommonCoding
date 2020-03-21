@@ -1,12 +1,15 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
 int main()
 {
-	priority_queue<pair<int,pair<int,int>>,vector<pair<int,pair<int,int>>>,greater<pair<int,pair<int,int>>>> q;
-	q.push({1,{1,1}});
-	q.push({2,{2,1}});
+	priority_queue<tuple<int, int,int>, vector<tuple<int, int, int>>, greater<tuple<int, int, int>>> q;
+	q.push({1,2, 3});
+	q.push({4, 5,4});
+	q.push({0, 5,4});
+	q.push({3, 5,3});
 
 	auto i = q.top();
-	cout<<i.first<<endl;
+
+	cout << get<0>(i) << endl;
 }

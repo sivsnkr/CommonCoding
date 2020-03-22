@@ -3,18 +3,12 @@ using namespace std;
 
 int main()
 {
-    int n;
-    cin >> n;
+    // int x,y,p,q;
+    // cin>>x>>y>>p>>q;
 
-    int i;
-    set<int> notShake;
-    for (i = 0; i < 10; i++)
-    {
-        for (int j = 0; j < 10; j++)
-        {
-            int no;
-            cin >> no;
-            notShake.insert(no);
-        }
-    }
+    // int b1,b2,b3;
+
+    // b1 = 
+    int g = gcd(10,12);
+    cout<<g<<endl;
 }

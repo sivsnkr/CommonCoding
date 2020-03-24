@@ -3,12 +3,14 @@ using namespace std;
 
 int main()
 {
-    // int x,y,p,q;
-    // cin>>x>>y>>p>>q;
-
-    // int b1,b2,b3;
-
-    // b1 = 
-    int g = gcd(10,12);
-    cout<<g<<endl;
+    long int e = 100000000;
+    time_t cur1 = time(NULL);
+    cout << "time1 " << cur1 << endl;
+    for (int i = 0; i < e; i++)
+    {
+        // just loop
+    }
+    time_t cur2 = time(NULL);
+    int dif = (cur2 - cur1);
+    cout << dif << endl;
 }

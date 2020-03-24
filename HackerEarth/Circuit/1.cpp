@@ -3,6 +3,7 @@ using namespace std;
 
 int main()
 {
+<<<<<<< HEAD
     int t;
     cin>>t;
 
@@ -32,4 +33,16 @@ int main()
 
         cout<<min<<endl;
     }
+=======
+    long int e = 100000000;
+    time_t cur1 = time(NULL);
+    cout << "time1 " << cur1 << endl;
+    for (int i = 0; i < e; i++)
+    {
+        // just loop
+    }
+    time_t cur2 = time(NULL);
+    int dif = (cur2 - cur1);
+    cout << dif << endl;
+>>>>>>> f897f82e589c56bc1b59d0cdaa0a9355c1b60465
 }

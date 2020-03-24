@@ -1,5 +1,19 @@
 #include <bits/stdc++.h>
 using namespace std;
+// input
+// 0 1 4
+// 0 7 8
+// 1 2 8
+// 1 7 11
+// 7 6 1
+// 7 8 7
+// 2 3 7
+// 2 5 4
+// 6 5 2
+// 3 4 9
+// 3 5 14
+// 5 4 10
+//2 8 2
 
 int main()
 {
@@ -16,8 +30,6 @@ int main()
 		graph[src].push_back({dest, weight});
 		graph[dest].push_back({src, weight});
 	}
-
-	// priority_queue<tuple<int, int, int>, vector<tuple<int, int, int>>, greater<tuple<int, int, int>>> included;
 
 	set<tuple<int, int, int>> included;
 

@@ -14,6 +14,7 @@ using namespace std;
 // 3 5 14
 // 5 4 10
 // 2 8 2
+// 8 6 6
 
 int main()
 {

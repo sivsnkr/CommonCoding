@@ -13,7 +13,7 @@ using namespace std;
 // 3 4 9
 // 3 5 14
 // 5 4 10
-//2 8 2
+// 2 8 2
 
 int main()
 {

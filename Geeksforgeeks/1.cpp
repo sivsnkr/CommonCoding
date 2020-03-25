@@ -1,56 +1,44 @@
 #include<bits/stdc++.h>
 using namespace std;
-
 int main()
 {
-	int edge = 5;
+	int edges = 14, nodes = 9;
 
-	int i; // counter
+	priority_queue<tuple<int,int,int>, vector<tuple<int,int,int>>, greater<tuple<int,int,int>>> graph;
 
-	vector<tuple<int,int,int>> edges(edge);
-
-	for(i = 0; i < edge; i++)
+	int i;
+	for(i = 0; i < edges; i++)
 	{
 		int src,dest,weight;
 		cin>>src>>dest>>weight;
-		edges[i] = {src,dest,weight};
+		graph.push({weight,src,dest});
 	}
 
-	vector<tuple<int,int,int>> modifiedEdges(edge+4);
-	modifiedEdges.assign(edges.begin(),edges.end());
-
-	vector<int> weights(5);
-	weights[0] = 0;
-
-	int j;
-
-	for(i = 0; i < 3; i++)
+	vector<bool> visited(nodes,false);
+	vector<unordered_set<int>> mst(nodes);
+	int nodesCounter = 0;
+	while(!graph.empty())
 	{
-		bool changed = false;
-		for(j = 0; j < edge; j++)
+		int src,dest;
+		auto top = graph.top();
+		src = get<1>(top);
+		dest = get<2>(top);
+
+		graph.pop();
+		if(!(visited[src]&&visited[dest]))
 		{
-			int src = get<0>(modifiedEdges[j]);
-			int dest = get<1>(modifiedEdges[j]);
-			int weight = get<2>(modifiedEdges[j]);
-
-			if(weights[dest] > weights[src]+weight)
-			{
-				changed = false;
-				weights[dest] = weights[src]+weight;
-			}
+			mst[src].insert(dest);
 		}
-
-		if(!changed)
-			break;
-
+		visited[src] = true,visited[dest] = true;
 	}
 
-	for(i = 0; i < edge; i++)
+	for(i = 0; i < nodes; i++)
 	{
-		int src = get<0>(edges[i]);
-		int dest = get<1>(edges[i]);
-		get<2>(edges[i]) = weights[dest]-weights[src]+ get<2>(edges[i]);
+		cout<<i<<" ";
+		for(auto j = mst[i].begin(); j != mst[i].end(); j++)
+		{
+			cout<<*j<<" ";
+		}
+		cout<<endl;
 	}
-
-	// now run djiskstra for all vertices as source and store nodes in adjacency list
 }

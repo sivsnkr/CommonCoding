@@ -3,6 +3,5 @@ using namespace std;
 
 int main()
 {
-	vector<int> root(4);
-	iota(root.begin(), root.end(), 0);
+	set<set<pair<int,int>>> q;
 }

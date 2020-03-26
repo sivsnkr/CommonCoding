@@ -1,16 +1,43 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+void dfs(int src, vector<unordered_set<int>> &graph, vector<int> &visited)
+{
+    unordered_set<int>::iterator it;
+    for(it = graph[src].begin(); it != graph[src].end(); it++)
+    {
+        if(visited[*it] >= 1)
+            visited[*it]++;
+        else
+        {
+            visited[*it]++;
+            dfs(*it,graph,visited);
+        }
+    }
+}
+
 int main()
 {
-    long int e = 100000000;
-    time_t cur1 = time(NULL);
-    cout << "time1 " << cur1 << endl;
-    for (int i = 0; i < e; i++)
+    int nodes,edges;
+    cin>>nodes>>edges;
+
+    nodes++;
+    vector<unordered_set<int>> graph(nodes);
+
+    int i;
+    for(i  = 0; i < edges; i++)
     {
-        // just loop
+        int src, dest; 
+        cin>>src>>dest;
+        graph[src].insert(dest);
+        graph[dest].insert(src);
     }
-    time_t cur2 = time(NULL);
-    int dif = (cur2 - cur1);
-    cout << dif << endl;
+
+    vector<int> visited(nodes,0);
+    dfs(1,graph,visited);
+
+    for(i = 0; i < nodes; i++)
+    {
+        cout<<i<<" "<<visited[i]<<endl;
+    }
 }

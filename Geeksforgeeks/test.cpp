@@ -3,5 +3,5 @@ using namespace std;
 
 int main()
 {
-	set<set<pair<int,int>>> q;
+	cout<<int('a')<<endl;
 }

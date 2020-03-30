@@ -1,6 +1,14 @@
 #include<bits/stdc++.h>
 using namespace std;
 
+// work only for DAG(directed acyclic graph)
+// input
+// 5 0
+// 5 2
+// 4 0
+// 4 1
+// 2 3
+// 3 1
 void dfs(int src, vector<unordered_set<int>> &graph, stack<int> &elements, vector<bool> &visited)
 {
     visited[src] = 1;
@@ -17,30 +25,19 @@ void dfs(int src, vector<unordered_set<int>> &graph, stack<int> &elements, vecto
 
 int main()
 {
-    int nodes = 26;
-    vector<string> dict(5);
-    for(int i = 0; i < 5; i++)
-    {
-        cin>>dict[i];
-    }
+    int nodes = 6,edges = 6;
 
     vector<unordered_set<int>> graph(nodes);
     int i;
-    for(i = 0; i < 5; i++)
+    for(i = 0; i < edges; i++)
     {
-        int length = dict[i].length();
-        for(int j = 0; j < length; j++)
-        {
-            for(int k = j+1; k < length; k++)
-            {
-                if(graph[dict[i][k]-97].find(dict[i][j]-97) == graph[dict[i][k]-97].end())
-                    graph[dict[i][j]-97].insert(dict[i][k]-97);
-            }
-        }
+        int src,dest;
+        cin>>src>>dest;
+        graph[src].insert(dest);
     }
 
     stack<int> elements;
-    vector<bool> visited(nodes,false);
+    vector<bool> visited(nodes);
     for(i = 0; i < nodes; i++)
     {
         if(!visited[i])
@@ -49,9 +46,8 @@ int main()
 
     while(!elements.empty())
     {
-        int top = elements.top();
+        cout<<elements.top()<<" ";
         elements.pop();
-        cout<<char(top+97)<<" ";
     }
     cout<<endl;
 }

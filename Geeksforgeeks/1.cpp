@@ -39,9 +39,6 @@ int main()
         }
     }
 
-    bool res = graph[0].find(1)==graph[0].end();
-    cout<<res<<endl;
-
     stack<int> elements;
     vector<bool> visited(nodes,false);
     for(i = 0; i < nodes; i++)

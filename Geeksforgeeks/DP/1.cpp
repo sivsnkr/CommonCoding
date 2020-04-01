@@ -1,52 +1,43 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-int getres(int matrix[3][3])
+bool getres(int arr[], int n, int sum)
 {
-	int resmatrix[3][3];
-	
-	// populate all the rows first cell with cell value
+	int subset[sum+1][n+1];
+
+	// if sum 0, then true
 	int i;
-	for(i = 0; i < 3; i++)
+	for(i = 0; i < n; i++)
 	{
-		resmatrix[i][0] = matrix[i][0];
+		subset[0][i] = true;
 	}
 
-	// now assign optimall value to all the cell
-
-	int j;
-	for(j = 1; j < 3; j++)
+	// if subset 0, then false
+	for(i = 0; i < n; i++)
 	{
-		for(i = 0; i < 3; i++)
-		{
-			int value = resmatrix[i][j-1];
-			if(i > 0)
-			{
-				value = max(resmatrix[i-1][j-1],value);
-			}
+		subset[i][0] = false;
+	}
 
-			if(i+1 < 3)
-				value = max(value,resmatrix[i+1][j-1]);
-			resmatrix[i][j] = matrix[i][j]+value;//max value it can get
+	for(i = 1; i <= n; i++)
+	{
+		for(int j = 1; j <= sum; j++)
+		{
+			if(j < arr[i-1])
+				subset[j][i] = subset[j][i-1];
+			else
+				subset[j][i] = subset[j][i-1] || subset[j-arr[i-1]][i-1];
 		}
 	}
 
-	// get the max value from last column
-	int returnvalue = 0;
-	for(i = 0; i < 3; i++)
-	{
-		returnvalue = max(returnvalue,resmatrix[i][2]);
-	}
-
-	return returnvalue;
+	return subset[sum][n];
 }
 
+// main driver code
 int main()
 {
-	// main driver code
-	int gold[3][3]= {{1, 3, 14},
-                   {2, 1, 4},
-                  {0, 6, 4}};
-	int res = getres(gold);
-	cout<<res<<endl;
+	int set[] = {3, 34, 4, 12, 5, 2}; 
+  	int sum = 2;
+	bool res = getres(set,6,sum);
+	res?cout<<"True":cout<<"False";
+	cout<<endl;
 }

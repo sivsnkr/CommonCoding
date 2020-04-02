@@ -31,9 +31,22 @@ bool getres(int arr[], int n, int sum)
 // main driver code
 int main()
 {
-	int set[] = {3, 34, 4, 12, 5, 2}; 
-  	int sum = 7;
-	bool res = getres(set,6,sum);
+	int set[] = {3, 1, 7, 5}; 
+  	// int sum = 7;
+
+	// total sum
+	int totalsum = 0;
+	for(int i : set)
+		totalsum+=i;
+	bool res = false;
+	for(int i = 6; i <= totalsum;  i*=2)
+	{
+		if(getres(set,4,i))
+		{
+			res = true;
+			break;
+		}
+	}
 	res?cout<<"True":cout<<"False";
 	cout<<endl;
 }

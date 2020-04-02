@@ -1,35 +1,46 @@
-// A recursive solution for subset sum problem 
+// Returns true if there exists a subset 
+// with given sum in arr[] 
 #include <stdio.h> 
+#include <stdbool.h> 
 
-// Returns true if there is a subset of set[] with sun equal to given sum 
-bool isSubsetSum(int set[], int n, int sum) 
+bool isSubsetSum(int arr[], int n, int sum) 
 { 
-// Base Cases 
-if (sum == 0) 
-	return true; 
-if (n == 0 && sum != 0) 
-	return false; 
+	// The value of subset[i%2][j] will be true 
+	// if there exists a subset of sum j in 
+	// arr[0, 1, ...., i-1] 
+	bool subset[2][sum + 1]; 
 
-// If last element is greater than sum, then ignore it 
-if (set[n-1] > sum) 
-	return isSubsetSum(set, n-1, sum); 
+	for (int i = 0; i <= n; i++) { 
+		for (int j = 0; j <= sum; j++) { 
 
-/* else, check if sum can be obtained by any of the following 
-	(a) including the last element 
-	(b) excluding the last element */
-return isSubsetSum(set, n-1, sum) || 
-						isSubsetSum(set, n-1, sum-set[n-1]); 
+			// A subset with sum 0 is always possible 
+			if (j == 0) 
+				subset[i % 2][j] = true; 
+
+			// If there exists no element no sum 
+			// is possible 
+			else if (i == 0) 
+				subset[i][j] = false; 
+			else if (arr[i - 1] <= j) 
+				subset[i % 2][j] = subset[(i + 1) % 2] 
+			[j - arr[i - 1]] || subset[(i + 1) % 2][j]; 
+			else
+				subset[i % 2][j] = subset[(i + 1) % 2][j]; 
+		} 
+	} 
+
+	return subset[n % 2][sum]; 
 } 
 
-// Driver program to test above function 
+// Driver code 
 int main() 
 { 
-int set[] = {3, 34, 4, 12, 5, 2}; 
-int sum = 0; 
-int n = sizeof(set)/sizeof(set[0]); 
-if (isSubsetSum(set, n, sum) == true) 
-	printf("Found a subset with given sum"); 
-else
-	printf("No subset with given sum"); 
-return 0; 
+	int arr[] = { 6, 2, 5 }; 
+	int sum = 8; 
+	int n = sizeof(arr) / sizeof(arr[0]); 
+	if (isSubsetSum(arr, n, sum) == true) 
+		printf("There exists a subset with given sum"); 
+	else
+		printf("No subset exists with given sum"); 
+	return 0; 
 } 

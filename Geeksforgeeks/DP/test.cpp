@@ -1,46 +1,44 @@
-// Returns true if there exists a subset 
-// with given sum in arr[] 
-#include <stdio.h> 
-#include <stdbool.h> 
+// CPP program to find the largest subset which 
+// where each pair is divisible. 
+#include <bits/stdc++.h> 
+using namespace std; 
 
-bool isSubsetSum(int arr[], int n, int sum) 
+// function to find the longest Subsequence 
+int largestSubset(int a[], int n) 
 { 
-	// The value of subset[i%2][j] will be true 
-	// if there exists a subset of sum j in 
-	// arr[0, 1, ...., i-1] 
-	bool subset[2][sum + 1]; 
+	// Sort array in increasing order 
+	sort(a, a + n); 
 
-	for (int i = 0; i <= n; i++) { 
-		for (int j = 0; j <= sum; j++) { 
+	// dp[i] is going to store size of largest 
+	// divisible subset beginning with a[i]. 
+	int dp[n]; 
 
-			// A subset with sum 0 is always possible 
-			if (j == 0) 
-				subset[i % 2][j] = true; 
+	// Since last element is largest, d[n-1] is 1 
+	dp[n - 1] = 1; 
 
-			// If there exists no element no sum 
-			// is possible 
-			else if (i == 0) 
-				subset[i][j] = false; 
-			else if (arr[i - 1] <= j) 
-				subset[i % 2][j] = subset[(i + 1) % 2] 
-			[j - arr[i - 1]] || subset[(i + 1) % 2][j]; 
-			else
-				subset[i % 2][j] = subset[(i + 1) % 2][j]; 
-		} 
+	// Fill values for smaller elements. 
+	for (int i = n - 2; i >= 0; i--) { 
+
+		// Find all multiples of a[i] and consider 
+		// the multiple that has largest subset 
+		// beginning with it. 
+		int mxm = 0; 
+		for (int j = i + 1; j < n; j++) 
+			if (a[j] % a[i] == 0) 
+				mxm = max(mxm, dp[j]); 
+		cout<<"mxm "<<mxm<<endl;
+		dp[i] = 1 + mxm; 
 	} 
 
-	return subset[n % 2][sum]; 
+	// Return maximum value from dp[] 
+	return *max_element(dp, dp + n); 
 } 
 
-// Driver code 
+// driver code to check the above function 
 int main() 
 { 
-	int arr[] = { 6, 2, 5 }; 
-	int sum = 8; 
-	int n = sizeof(arr) / sizeof(arr[0]); 
-	if (isSubsetSum(arr, n, sum) == true) 
-		printf("There exists a subset with given sum"); 
-	else
-		printf("No subset exists with given sum"); 
+	int a[] = { 1, 3, 6, 13, 17, 18 }; 
+	int n = sizeof(a) / sizeof(a[0]); 
+	cout << largestSubset(a, n) << endl; 
 	return 0; 
 } 

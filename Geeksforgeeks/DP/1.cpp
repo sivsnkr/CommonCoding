@@ -1,52 +1,32 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-bool getres(int arr[], int n, int sum)
+int getres(int arr[],int n)
 {
-	int subset[sum+1][2];
-
+	int dp[n];
+	dp[0] = arr[0];
+	
 	int i;
-	for(i = 1; i <= sum; i++)
+	for(i = 1; i < n; i++)
 	{
-		subset[i][0] = false;
-	}
-
-	for(i = 1; i <= n; i++)
-	{
-		for(int j = 0; j <= sum; j++)
+		int mxm = 0;
+		int first = i-1;
+		int second = 0;
+		while(first >= second)
 		{
-			if(j == 0)
-				subset[j][i%2] = true;
-			else if(j < arr[i-1])
-				subset[j][i%2] = subset[j][(i+1)%2];
-			else 
-				subset[j][i%2] = subset[j][(i+1)%2]||subset[j-arr[i-1]][(i+1)%2];
+			mxm = max(mxm,dp[first]+dp[second]);
+			first--;
+			second++;
 		}
+		dp[i] = max(mxm,arr[i]);
 	}
-
-	// cout<<"fsfsf"<<endl;
-	return subset[sum][n%2];
+	return dp[n-1];
 }
 
-// main driver code
 int main()
 {
-	int set[] = {3, 1, 7, 5}; 
-  	// int sum = 7;
-
-	// total sum
-	int totalsum = 0;
-	for(int i : set)
-		totalsum+=i;
-	bool res = false;
-	for(int i = 6; i <= totalsum;  i*=2)
-	{
-		if(getres(set,4,i))
-		{
-			res = true;
-			break;
-		}
-	}
-	res?cout<<"True":cout<<"False";
-	cout<<endl;
+	int arr[] = {1, 5, 8, 9, 10, 17, 17, 20};
+	int size  = sizeof(arr)/sizeof(arr[0]);
+	int res = getres(arr,size);
+	cout<<res<<endl;
 }

@@ -1,24 +1,70 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int getres(int arr1[], int arr2[], int n, int i, int size)
+void printres(int arr[4][4], int n)
 {
-	if (i == size - 1)
-		return n;
-	int res1 = getres(arr1, arr2, n + arr1[i + 1], i + 1, size);
-	int res2 = getres(arr1, arr2, n + arr2[i + 1], i + 1, size);
-	return min(res1, res2);
+	tuple<int, int, int> dp[n][n];
+	dp[0][0] = {0, 0, 0};
+
+	int i, j;
+	int max_value = 0;
+	pair<int, int> coordinates = {0, 0};
+	for (i = 0; i < n; i++)
+	{
+		for (j = 0; j < n; j++)
+		{
+			if (i == 0 && j == 0)
+				continue;
+			if (i - 1 >= 0)
+			{
+				tuple<int, int, int> temp = {i, j, 0};
+				if (arr[i - 1][j] == arr[i][j] - 1 || arr[i - 1][j] == arr[i][j] + 1)
+				{
+					// get the max pair value
+					temp = {i - 1, j, get<2>(dp[i - 1][j]) + 1};
+				}
+
+				if (j - 1 >= 0)
+				{
+					if (get<2>(dp[i][j - 1]) + 1 > get<2>(temp))
+					{
+						temp = {i, j - 1, get<2>(dp[i][j - 1]) + 1};
+					}
+				}
+				dp[i][j] = temp;
+				if (get<2>(temp) > max_value)
+				{
+					max_value = get<2>(temp);
+					coordinates = {i, j};
+				}
+			}
+		}
+	}
+	cout << max_value << endl;
+
+	i = coordinates.first, j = coordinates.second;
+	while (1)
+	{
+		cout << arr[i][j] << " ";
+		// break if movement no possible
+		if (i == get<0>(dp[i][j]) && j == get<1>(dp[i][j]))
+			break;
+
+		i = get<0>(dp[i][j]), j = get<1>(dp[i][j]);
+	}
+	cout << endl;
 }
 
 int main()
 {
-	int firstassembly[] = {4, 5, 3, 2};
-	int secondassembly[] = {2, 10, 1, 4};
+	int n = 4;
+	int mat[4][4] =
+		{
+			{9, 6, 5, 2},
+			{8, 7, 6, 5},
+			{7, 3, 1, 6},
+			{1, 1, 1, 7},
+		};
 
-	// entry point first assembly
-
-	int res1 = getres(firstassembly, secondassembly, 10 + firstassembly[0], 0, 4);
-	int res2 = getres(secondassembly, firstassembly, 12 + secondassembly[0], 0, 4);
-
-	cout << min(res1, res2) << endl;
+	printres(mat, n);
 }

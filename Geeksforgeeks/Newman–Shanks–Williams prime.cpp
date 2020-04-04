@@ -4,7 +4,7 @@ using namespace std;
 int main()
 {
     int n;
-    n = 10;
+    n = 13;
     int newman_series[n];
     newman_series[0] = 1;
     newman_series[1] = 1;
